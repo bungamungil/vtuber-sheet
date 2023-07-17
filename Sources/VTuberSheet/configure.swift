@@ -39,5 +39,7 @@ public func configure(_ app: Application) async throws {
         app.cacheSettings.set(expirationInSeconds: expirationInSeconds)
     }
 
+    _ = app.redis.delete([Application.VTuberSheet.VTuberRedisKey])
+
     try routes(app)
 }

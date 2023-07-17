@@ -22,7 +22,7 @@ extension Application {
             typealias Value = Storage
         }
 
-        fileprivate static let VTuberRedisKey: RedisKey = "VtuberSheet:VTubers"
+        static let VTuberRedisKey: RedisKey = "VtuberSheet:VTubers"
 
         fileprivate var storage: Storage {
             if self.application.storage[Key.self] == nil {
