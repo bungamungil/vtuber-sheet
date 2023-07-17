@@ -123,6 +123,9 @@ extension Array where Element == Value {
             if self.count > 13 && !self[12].isEmpty { // Row M
                 vtuber.affiliation = self[12].string
             }
+            if self.count > 14 && !self[13].isEmpty { // Row N
+                vtuber.affiliationLogo = self[13].string?.components(separatedBy: "\"").dropLast().last
+            }
             return vtuber
         }
         return nil

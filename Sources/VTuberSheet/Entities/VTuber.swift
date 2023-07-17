@@ -17,6 +17,8 @@ struct VTuber {
 
     var affiliation: String?
 
+    var affiliationLogo: String?
+
 }
 
 
