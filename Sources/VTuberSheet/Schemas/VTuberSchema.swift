@@ -31,6 +31,13 @@ let vtuberSchema = try! Schema<VTuberResolver, Request>(coders: provideCoders())
             Argument("after", at: \.after)
             Argument("before", at: \.before)
         }
+
+        Field("channels", at: VTuberResolver.getAllVTubers) {
+            Argument("first", at: \.first)
+            Argument("last", at: \.last)
+            Argument("after", at: \.after)
+            Argument("before", at: \.before)
+        }
     }
 
 }
