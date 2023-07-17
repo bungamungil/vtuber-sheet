@@ -19,6 +19,8 @@ services:
     command: ["serve", "--env", "production", "--hostname", "0.0.0.0", "--port", "8080"]
     networks:
       - vtuber-sheet
+    depends_on:
+      - cache
 
   cache:
     image: redis:7.0-alpine
