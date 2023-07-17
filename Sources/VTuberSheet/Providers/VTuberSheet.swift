@@ -65,7 +65,10 @@ extension Application {
             if row.isGraduated {
                 return false
             }
-            return true
+            if row.isTerminated {
+                return false
+            }
+            return row.channelID != nil
         }
 
         fileprivate func parseVtuber(index: Int, row: [Value]) -> [VTuber] {
@@ -133,6 +136,20 @@ extension Array where Element == Value {
     
     fileprivate var isGraduated: Bool {
         return self.count > 13 && self[12].string == "GRADUATED"
+    }
+
+    fileprivate var isTerminated: Bool {
+        return self.count > 13 && self[12].string == "TERMINATED"
+    }
+
+    fileprivate var channelID: String? {
+        if self.count > 2 && !self[0].isEmpty, let channelID = self[0].string?.components(separatedBy: "\"").dropLast().last {
+            if !channelID.hasPrefix("UC") {
+                return nil
+            }
+            return channelID
+        }
+        return nil
     }
     
 }
