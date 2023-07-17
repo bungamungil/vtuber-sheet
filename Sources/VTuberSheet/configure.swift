@@ -38,8 +38,6 @@ public func configure(_ app: Application) async throws {
     if let expirationInSeconds = Environment.get("CACHE_EXPIRATION_IN_SECONDS").flatMap(Int.init(_:)) {
         app.cacheSettings.set(expirationInSeconds: expirationInSeconds)
     }
-
-    _ = app.redis.delete([Application.VTuberSheet.VTuberRedisKey])
-
+    
     try routes(app)
 }

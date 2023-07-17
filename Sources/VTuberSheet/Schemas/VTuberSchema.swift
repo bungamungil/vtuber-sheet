@@ -24,6 +24,13 @@ let vtuberSchema = try! Schema<VTuberResolver, Request>(coders: provideCoders())
 
     ConnectionType(VTuber.self)
 
+    Type(Affiliation.self) {
+        Field("name", at: \.name)
+        Field("logo", at: \.logo)
+    }
+
+    ConnectionType(Affiliation.self)
+
     Query {
         Field("vtubers", at: VTuberResolver.getAllVTubers) {
             Argument("first", at: \.first)
@@ -33,6 +40,13 @@ let vtuberSchema = try! Schema<VTuberResolver, Request>(coders: provideCoders())
         }
 
         Field("channels", at: VTuberResolver.getAllVTubers) {
+            Argument("first", at: \.first)
+            Argument("last", at: \.last)
+            Argument("after", at: \.after)
+            Argument("before", at: \.before)
+        }
+
+        Field("affiliations", at: VTuberResolver.getAllAffiliations) {
             Argument("first", at: \.first)
             Argument("last", at: \.last)
             Argument("after", at: \.after)
