@@ -1,0 +1,35 @@
+version: '3.7'
+
+x-shared_environment: &shared_environment
+  LOG_LEVEL: ${LOG_LEVEL:-debug}
+
+volumes:
+  cache:
+    driver: local
+  
+services:
+  app:
+    image: vtuber-sheet:latest
+    build:
+      context: .
+    env_file:
+      - .env
+    ports:
+      - '8080:8080'
+    command: ["serve", "--env", "production", "--hostname", "0.0.0.0", "--port", "8080"]
+    networks:
+      - vtuber-sheet
+
+  cache:
+    image: redis:7.0-alpine
+    restart: always
+    command: /bin/sh -c "redis-server --save 20 1 --loglevel warning --requirepass $$REDIS_PASSWORD"
+    env_file:
+      - .env.redis
+    volumes: 
+      - cache:/data
+    networks:
+      - vtuber-sheet
+
+networks:
+  vtuber-sheet:

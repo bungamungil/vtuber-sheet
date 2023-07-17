@@ -1,0 +1,52 @@
+{
+    "configurations": [
+        {
+            "type": "lldb",
+            "request": "launch",
+            "sourceLanguages": [
+                "swift"
+            ],
+            "name": "Debug App",
+            "program": "${workspaceFolder:vtuber-sheet}/.build/debug/App",
+            "args": [],
+            "cwd": "${workspaceFolder:vtuber-sheet}",
+            "preLaunchTask": "swift: Build Debug App"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "sourceLanguages": [
+                "swift"
+            ],
+            "name": "Release App",
+            "program": "${workspaceFolder:vtuber-sheet}/.build/release/App",
+            "args": [],
+            "cwd": "${workspaceFolder:vtuber-sheet}",
+            "preLaunchTask": "swift: Build Release App"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "sourceLanguages": [
+                "swift"
+            ],
+            "name": "Debug VTuberSheet",
+            "program": "${workspaceFolder:vtuber-sheet}/.build/debug/VTuberSheet",
+            "args": [],
+            "cwd": "${workspaceFolder:vtuber-sheet}",
+            "preLaunchTask": "swift: Build Debug VTuberSheet"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "sourceLanguages": [
+                "swift"
+            ],
+            "name": "Release VTuberSheet",
+            "program": "${workspaceFolder:vtuber-sheet}/.build/release/VTuberSheet",
+            "args": [],
+            "cwd": "${workspaceFolder:vtuber-sheet}",
+            "preLaunchTask": "swift: Build Release VTuberSheet"
+        }
+    ]
+}
