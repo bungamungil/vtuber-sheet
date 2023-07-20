@@ -1,5 +1,3 @@
-import GraphiQLVapor
-import GraphQLKit
 import QueuesRedisDriver
 import Vapor
 
@@ -18,11 +16,6 @@ public func configure(_ app: Application) async throws {
         fatalError("Cell range not found")
     }
     app.vtuberSheet.use(spreadsheetID: spreadsheetID, range: range)
-    app.register(graphQLSchema: vtuberSchema, withResolver: VTuberResolver())
-
-    if !app.environment.isRelease {
-        app.enableGraphiQL()
-    }
 
     app.middleware.use(app.sessions.middleware)
 
