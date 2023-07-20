@@ -22,6 +22,8 @@ extension Application {
             typealias Value = Storage
         }
 
+        static let ChannelRedisKey: RedisKey = "VtuberSheet:Channels"
+
         static let VTuberRedisKey: RedisKey = "VtuberSheet:VTubers"
 
         static let AffiliationRedisKey: RedisKey = "VtuberSheet:Affiliations"
@@ -51,6 +53,20 @@ extension Application {
 
         var baseURL: String {
             "https://sheets.googleapis.com/v4/spreadsheets/\(self.spreadsheetID)/values/\(self.range)"
+        }
+
+        var channels: [Channel] {
+            get async throws {
+                if let channels = try await self.application.redis.get(Self.ChannelRedisKey, asJSON: [Channel].self) {
+                    self.application.logger.info("Using cached response")
+                    return channels
+                }
+                let channels: [Channel] = try await self.values
+                    .enumerated()
+                    .flatMap(self.parseChannel)
+                try await self.application.redis.setex(Self.ChannelRedisKey, toJSON: channels, expirationInSeconds: self.application.cacheSettings.expirationInSeconds)
+                return channels
+            }
         }
 
         var vtubers: [VTuber] {
@@ -104,8 +120,15 @@ extension Application {
             return affiliation.name
         }
 
+        fileprivate func parseChannel(index: Int, row: [Value]) -> [Channel] {
+            guard let channelModel = row.asChannel() else {
+                return []
+            }
+            return [channelModel]
+        }
+
         fileprivate func parseVTuber(index: Int, row: [Value]) -> [VTuber] {
-            guard let vtuberModel = row.asVTuber(on: index + 1) else {
+            guard let vtuberModel = row.asVTuber() else {
                 return []
             }
             return [vtuberModel]
@@ -143,15 +166,22 @@ extension Application {
 
 
 extension Array where Element == Value {
-    
-    fileprivate func asVTuber(on rowNumber: Int) -> VTuber? {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "dd MMMM"
+
+    fileprivate func asChannel() -> Channel? {
         if self.count > 2 && !self[0].isEmpty, let channelID = self[0].string?.components(separatedBy: "\"").dropLast().last, let vtuberName = self[1].string {
             if !channelID.hasPrefix("UC") {
                 return nil
             }
-            var vtuber = VTuber(rowNumber: rowNumber, channelID: channelID, platform: .youtube, name: vtuberName)
+            return Channel(channelID: channelID, platform: .youtube, name: vtuberName)
+        }
+        return nil
+    }
+    
+    fileprivate func asVTuber() -> VTuber? {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "dd MMMM"
+        if let channel = self.asChannel() {
+            var vtuber = VTuber(from: channel)
             if self.count > 8 && !self[7].isEmpty { // Row H
                 vtuber.persona = self[7].string
             }

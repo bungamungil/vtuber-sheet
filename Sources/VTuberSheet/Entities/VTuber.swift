@@ -3,8 +3,6 @@ import Vapor
 
 struct VTuber {
 
-    var rowNumber: Int
-
     var channelID: String
 
     var platform: Platform
@@ -26,3 +24,14 @@ extension VTuber: Content { }
 
 
 extension VTuber: Codable { }
+
+
+extension VTuber {
+
+    init(from channel: Channel) {
+        self.channelID = channel.channelID
+        self.platform = channel.platform
+        self.name = channel.name
+    }
+
+}
